@@ -1,4 +1,5 @@
 <!-- End of navbar -->
+    <link rel="stylesheet" href="views/inc/css/app-navbar.css">
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -8,13 +9,13 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" id="new-note"><i class="fa fa-plus"></i></a>
+            <button type="button" class="nav-link btn btn-success text-white" id="new-note"><i class="fa fa-plus"></i> New Note</button>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="new-folder"><i class="fa fa-folder"></i></a>
+            <button type="button" class="nav-link btn btn-success text-white" id="new-folder"><i class="fa fa-folder"></i> New Folder</button>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" id="logout"><i class="fa fa-sign-out"></i></a>
+          <li class="nav-item ml-auto">
+            <form action="server.php" method="POST"><button type="submit" class="nav-link btn btn-primary text-white" name="logout_btn"><i class='fa fa-sign-out'></i> Sign Out</button>
           </li>
         </ul>
       </div>

@@ -1,6 +1,6 @@
 <?php
 
-include('views/inc/function/server.phtml');
+include('server.php');
 
 // // Check connection
 // if ($db->connect_error) {

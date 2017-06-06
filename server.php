@@ -19,18 +19,18 @@ if (isset($_POST['register_btn'])) {
     
     # Making sure fields are not empty
     if ($username == '' OR $username == ' ') {
-        $errors[] = 'Username is required.';
+        array_push($errors, 'Username is required.');
     }
     if ($password == '' OR $password == ' ') {
-        $errors[] = 'Password is required.';
+        array_push($errors, 'Password is required.');
     }
     if ($email == '' OR $email == ' ') {
-        $errors[] = 'An email is required.';
+        array_push($errors, 'An email is required.');
     }
     
     # Making sure passwords match
     if ($password != $verify_pass) {
-        $errors[] = 'Passwords do not match.';
+        array_push($errors, 'Passwords do not match.');
     }
     
     # If no errors, save user to database
@@ -43,20 +43,54 @@ if (isset($_POST['register_btn'])) {
         mysqli_query($db, $sql);
         
         $_SESSION['username'] = $username;
-        $_SESSION['first_name'] = $first_name;
         $_SESSION['success'] = 'You are now logged in as ' . $username . '.';
         header('location: dashboard.php');
+    } else {
+        $_SESSION['errors'] = $errors;
+        header('location: register');
     }
 }
 
 
 
-# Logout 
-if (isset($_GET['logout'])) {
+# User Logout 
+if (isset($_POST['logout_btn'])) {
     session_destroy();
     unset($_SESSION['username']);
     unset($_SESSION['first_name']);
     header('location: login.php');
+}
+
+
+# User Login
+if (isset($_POST['login_btn'])) {
+    $username = $db->real_escape_string($_POST['username']);
+    $password = $db->real_escape_string($_POST['password']);
+    
+    if (empty($username)) {
+        array_push($errors, 'Username is required');
+    }
+    if (empty($password)) {
+        array_push($errors, 'Password is required');
+    }
+    
+    # If no errors, go ahead and compare 
+    if (count($errors) == 0) {
+        $password = md5($password);
+        $sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
+        $result = mysqli_query($db, $sql);
+        if (mysqli_num_rows($result) == 1) {
+            $_SESSION['username'] = $username;
+            header('location: dashboard');
+        } else {
+            array_push($errors, 'The username/password combination is incorrect.');
+            $_SESSION['errors'] = $errors;
+            header('location: login');
+        }
+    } else {
+        $_SESSION['errors'] = $errors;
+        header('location: login');
+    }
 }
 
 

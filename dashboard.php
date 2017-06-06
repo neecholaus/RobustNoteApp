@@ -1,17 +1,18 @@
 <?php
 
 # Registration and login setting session
-include('views/inc/function/server.phtml');
+include('server.php');
 
 # Setting session user
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
-    $first_name = $_SESSION['first_name'];
     
 }
 
 
 # Head and app navbar
+$pageTitle = "Dashboard | Robust Notes";
+$specCSS = 'dashboard';
 include('views/inc/partials/head.phtml');
 include('views/inc/partials/app-navbar.phtml');
 ?>

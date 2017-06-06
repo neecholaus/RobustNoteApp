@@ -1,9 +1,7 @@
-<?php if (count($errors) > 0): ?>
+<?php $errors = $_SESSION['errors']; ?>
 
-<div class="alert alert-danger">
+<?php if(count($errors) > 0): ?>
     <?php foreach($errors as $error): ?>
-    <p><?= $error; ?></p>
+        <div class="alert alert-danger"><?= $error ?></div>
     <?php endforeach; ?>
-</div>
-
 <?php endif; ?>
