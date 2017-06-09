@@ -13,7 +13,7 @@ include('views/inc/partials/site-navbar.phtml');
 
 <div class="container pt-5 pb-5">
     <div class="row">
-        <form class="col-xs-12 col-sm-10 col-md-8 col-lg-6 mx-auto" action="server.php" method="POST">
+        <form class="col-xs-12 col-sm-10 col-md-8 col-lg-6 mx-auto" action="login.php" method="POST">
             <?php include('views/inc/function/errors.php'); ?>
             
             <h4>Login</h4>
