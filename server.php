@@ -4,6 +4,7 @@ session_start();
 $username = '';
 $email = '';
 $errors = array();
+$error = '';
 
 # Connect to the database
 $db = mysqli_connect(getenv('IP'), getenv('C9_USER'), 'testpass', 'c9', 3306);
@@ -17,18 +18,18 @@ if (isset($_POST['register_btn'])) {
     
     # Making sure fields are not empty
     if (empty($username)) {
-        array_push($errors, '<i class="fa fa-exclamation-circle"></i> Username is required.');
+        array_push($errors, 'Username is required.');
     }
     if (empty($password)) {
-        array_push($errors, '<i class="fa fa-exclamation-circle"></i> Password is required.');
+        array_push($errors, 'Password is required.');
     }
     if (empty($email)) {
-        array_push($errors, '<i class="fa fa-exclamation-circle"></i> An email is required.');
+        array_push($errors, 'An email is required.');
     }
     
     # Making sure passwords match
     if ($password != $verify_pass) {
-        array_push($errors, '<i class="fa fa-exclamation-circle"></i> Passwords do not match.');
+        array_push($errors, 'Passwords do not match.');
     }
     
     # If no errors, save user to database
@@ -67,10 +68,10 @@ if (isset($_POST['login_btn'])) {
     $password = $db->real_escape_string($_POST['password']);
     
     if (empty($username)) {
-        array_push($errors, '<i class="fa fa-exclamation-circle"></i> Username is required');
+        array_push($errors, 'Username is required');
     }
     if (empty($password)) {
-        array_push($errors, '<i class="fa fa-exclamation-circle"></i> Password is required');
+        array_push($errors, 'Password is required');
     }
     
     # If no errors, go ahead and compare 
@@ -84,7 +85,7 @@ if (isset($_POST['login_btn'])) {
             $_SESSION['username'] = $username;
             header('location: dashboard');
         } else {
-            array_push($errors, '<i class="fa fa-exclamation-circle"></i> The username/password combination is incorrect.');
+            array_push($errors, 'The username/password combination is incorrect.');
         }
     }
 }
@@ -105,16 +106,21 @@ if (isset($_POST['save_note_btn'])) {
     if (empty($note_content)) {
         array_push($errors, "Your note is empty.");
     }
+    $users_notes = "SELECT * FROM user_notes WHERE note_title='$note_title' and note_folder='$note_folder' and username='$username'";
+    $users_notes = mysqli_query($db, $users_notes);
+    if (mysqli_num_rows($users_notes) != 0) {
+        $errors[] = "You already have a note called '$note_title' in the selected folder.";
+        header('location: dashboard');
+    }
     
     if (count($errors) == 0) {
         $sql = "INSERT INTO user_notes (username, note_title, note_folder, note_content) VALUES ('$username', '$note_title', '$note_folder', '$note_content')";
         
         # Injecting SQL
         mysqli_query($db, $sql);
-        
-        # Redirect to dashboard
-        header('location: dashboard');
     }
+    
+    header('location: dashboard?error=' . base64_encode($error));
 }
 
 
@@ -127,6 +133,12 @@ if (isset($_POST['save_folder_btn'])) {
     if (empty($folder_title)) {
         array_push($errors, "Your folder has no name.");
     }
+    $user_folders = "SELECT * FROM user_folders WHERE folder_title='$folder_title' and username='$username'";
+    $user_folders = mysqli_query($db, $user_folders);
+    if (mysqli_num_rows($user_folders) > 0) {
+        $error = base64_encode('You have already made a folder with this name.');
+        header('location: dasboard?error=' . $error);
+    }
     
     $checkName = "SELECT * FROM user_folders WHERE username='$username' AND folder_title='$folder_title'";
     $result = mysqli_query($db, $checkName);
@@ -136,8 +148,6 @@ if (isset($_POST['save_folder_btn'])) {
             # Actual injection
             mysqli_query($db, $sql);
         }
-    } else {
-        array_push($errors, "You have already made a folder with this name.");
     }
 }
 
