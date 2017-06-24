@@ -125,8 +125,6 @@ include('views/inc/partials/app-navbar.phtml');
                         </div>
                     </form>
                 </div>
-                
-                
             </div>
         </div>
     </div>
@@ -174,6 +172,13 @@ include('views/inc/partials/app-navbar.phtml');
     $('#hide-notes').click(function() {
         $('#folders').slideUp();
         $('#drop-notes').show();
+    });
+    
+    $(window).on('resize', function() {
+        var width = window.innerWidth;
+        if (width > 576) {
+            $('#folders').show();
+        }
     });
     
 </script>
