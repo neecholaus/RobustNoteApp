@@ -35,7 +35,7 @@ if (isset($_SESSION['username'])) {
         $sql = "SELECT * FROM user_notes WHERE note_folder='$folder'";
         $result = mysqli_query($db, $sql);
         while ($row = mysqli_fetch_assoc($result)) {
-            echo "<li class='note-li'><i class='fa fa-sticky-note-o pr-3'></i>" . $row['note_title'] . "</li>";
+            echo "<li role='button' data-title='" . $row['note_title'] . "' data-folder='" . $row['note_folder'] . "' data-content='" . $row['note_content'] . "' class='note-li'><i class='fa fa-sticky-note-o pr-3'></i>" . $row['note_title'] . "</li>";
         }
     }
 }
@@ -61,7 +61,7 @@ include('views/inc/partials/app-navbar.phtml');
             <div class="mt-2" id="notes-no-folder">
                 <ul class="note-list">
                     <?php foreach($plain_notes as $key => $note): ?>
-                        <li role="button" class="note-li"><i class="fa fa-sticky-note-o pr-3"></i><?= $note['note_title'] ?></li>
+                        <li role="button" data-title="<?= $note['note_title']?>" data-folder="" data-content="<?= $note['note_content']?>" class="note-li"><i class="fa fa-sticky-note-o pr-3"></i><?= $note['note_title'] ?></li>
                     <?php endforeach; ?>
                 </ul>
             </div>
@@ -125,6 +125,18 @@ include('views/inc/partials/app-navbar.phtml');
                         </div>
                     </form>
                 </div>
+                
+                <!-- Note Display -->
+                <div class="bg-faded rounded mt-2 p-3" id="note-display">
+                    <h4 class="text-muted" id="note-display-title"></h4>
+                    <p id="note-display-folder"></p>
+                    <textarea class="form-control" id="note-display-content"></textarea>
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <button type="button" class="btn btn-secondary" id="close-note-display">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -132,8 +144,32 @@ include('views/inc/partials/app-navbar.phtml');
 
 <script>
     /* global $ */
+    
+    $('#note-display').hide();
     $('#add_note_con').hide();
     $('#add_folder_con').hide();
+    $('.folder-drop').hide();
+    
+    // Close note display window
+    $('#close-note-display').click(function() {
+        $('#note-display').hide();
+    });
+    
+    // Opening note from tree
+    $('.note-li').click(function(e) {
+       var title = this.getAttribute('data-title');
+       var folder = this.getAttribute('data-folder');
+       if (folder != '') {
+           folder = '<span class="text-muted"><i class="fa fa-folder"></i></span> <b>' + folder + '</b>';
+       }
+       var content = this.getAttribute('data-content');
+       $('#note-display').show();
+       $('#note-display-title').text(title);
+       $('#note-display-folder').html(folder);
+       $('#note-display-content').text(content);
+    });
+    
+    // Add new note
     $('#new_note').click(function() {
        $('#add_note_con').show();
        $('#add_folder_con').hide();
@@ -150,7 +186,6 @@ include('views/inc/partials/app-navbar.phtml');
     });
     
     // Folder Tree View Drops
-    $('.folder-drop').hide();
     $('.folder-li').click(function() {
         var folder_name = $(this).attr('id').split(' ').join('-');
         if ($('#' + folder_name).hasClass('on') == false) {

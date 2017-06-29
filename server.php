@@ -7,7 +7,7 @@ $errors = array();
 $error = '';
 
 # Connect to the database
-$db = mysqli_connect(getenv('IP'), getenv('C9_USER'), 'testpass', 'c9', 3306);
+$db = mysqli_connect(getenv('IP'), getenv('C9_USER'), '', 'c9', 3306);
 
 # Register user
 if (isset($_POST['register_btn'])) {
