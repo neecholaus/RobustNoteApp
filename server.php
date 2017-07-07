@@ -137,7 +137,7 @@ if (isset($_POST['save_folder_btn'])) {
     $user_folders = mysqli_query($db, $user_folders);
     if (mysqli_num_rows($user_folders) > 0) {
         $error = base64_encode('You have already made a folder with this name.');
-        header('location: dasboard?error=' . $error);
+        header('location: dashboard?error=' . $error);
     }
     
     $checkName = "SELECT * FROM user_folders WHERE username='$username' AND folder_title='$folder_title'";
@@ -151,5 +151,40 @@ if (isset($_POST['save_folder_btn'])) {
     }
 }
 
+
+
+
+# Delete noted
+if (isset($_POST['delete_note'])) {
+    $title = $_POST['note_delete_title'];
+    $folder = $_POST['note_delete_folder'];
+    $username = $_SESSION['username'];
+    $sql = "DELETE FROM user_notes WHERE note_title='$title' AND note_folder='$folder' AND username='$username'";
+    $res = mysqli_query($db, $sql);
+    header('location: dashboard?success=' . base64_encode('Your note has been removed successfully.'));
+}
+
+
+# Delete Folder
+if (isset($_POST['delete_folder'])) {
+    $title = $_POST['folder_name'];
+    $username = $_SESSION['username'];
+    $sql = "DELETE FROM user_folders WHERE username='$username' AND folder_title='$title'";
+    $res = mysqli_query($db, $sql);
+    header('location: dashboard?success=' . base64_encode('Your folder has been removed successfully.'));
+}
+
+
+
+# Save edits on note
+if (isset($_POST['edit_note'])) {
+    $title = $_POST['note_save_title'];
+    $folder = $_POST['note_save_folder'];
+    $content = $_POST['note_save_content'];
+    $username = $_SESSION['username'];
+    $sql = "UPDATE user_notes SET note_content='$content' WHERE username='$username'";
+    mysqli_query($db, $sql);
+    header('location: dashboard?success=' . base64_encode('Your note has been updated.'));
+}
 
 ?>

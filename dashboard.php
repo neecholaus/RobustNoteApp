@@ -75,6 +75,14 @@ include('views/inc/partials/app-navbar.phtml');
                     <?php foreach($folders as $folder): ?>
                         <li id="<?= join('-', split(' ', $folder)) ?>" class="folder-li" role="button"><i class="fa fa-folder pr-3"></i><?= $folder ?> <span class="pull-right pr-2"><i class="fa fa-caret-down"></i></span></li>
                         <div id="<?= join('-', split(' ', $folder)) ?>-drop" class="folder-drop">
+                            <span>
+                                <form action="dashboard.php" method="POST">
+                                    <input type="hidden" name="folder_name" value="<?= $folder ?>">
+                                    <div class="w-100 text-right">
+                                        <button type="submit" name="delete_folder" class="ml-auto text-muted" style="font-size:14px;border:none;background:transparent;" role="button"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                </form>
+                            </span>
                             <?php getNotes($db, $folder); ?>
                         </div>
                     <?php endforeach; ?>
@@ -85,7 +93,7 @@ include('views/inc/partials/app-navbar.phtml');
         </div>
         
         <div class="col-xs-12 col-sm-8 col-md-9 col-lg-10" id="display">
-            <div class="container pt-3 pb-3">
+            <div class="pt-3 pb-3">
                 <h4>Welcome<?= ' ' . $username; ?>!</h4>
                 <hr>
                 <button class="btn btn-secondary hidden-sm-up mobile-btn" id="drop-notes" type="button">Show Notes</button>
@@ -94,12 +102,23 @@ include('views/inc/partials/app-navbar.phtml');
                 
                 <!-- Errors -->
                 <?php include('views/inc/function/errors.php'); ?>
+                <?php if($_GET['success']): ?>
+                    <div class="alert alert-success mt-2">
+                        <i class="fa fa-check"></i> <?= base64_decode($_GET['success']) ?>
+                    </div>
+                <?php endif; ?>
+                <?php if($_GET['error']): ?>
+                    <div class="alert alert-danger mt-2">
+                        <i class="fa fa-exclamation-circle"></i> <?= base64_decode($_GET['error']) ?>
+                    </div>
+                <?php endif; ?>
             
                 <!-- Add Note Dropdown -->
                 <div class="bg-faded rounded mt-2 p-3" id="add_note_con">
                     <form action="dashboard.php" method="POST">
                         <h5>New Note</h5>
                         <input type="text" class="form-control" name="note_title" id="note_title" placeholder="Title">
+                        <span><i class="fa fa-info-circle"></i> Leave folder empty to create a Quick Note</span>
                         <select name="note_folder" id="note_folder" class="form-control">
                             <option value="" selected="selected">Select Folder</option>
                             <?php foreach($folders as $name): ?>
@@ -128,14 +147,26 @@ include('views/inc/partials/app-navbar.phtml');
                 
                 <!-- Note Display -->
                 <div class="bg-faded rounded mt-2 p-3" id="note-display">
-                    <h4 class="text-muted" id="note-display-title"></h4>
+                    <h4 class="text-muted"><span id="note-display-title"></span>
+                        <form action="dashboard" method="POST" style="display: inline-block">
+                            <input type="hidden" name="note_delete_title" class="note_edit_title">
+                            <input type="hidden" name="note_delete_folder" class="note_edit_folder">
+                            <button type="submit" class="btn btn-danger" name="delete_note"><i class="fa fa-trash"></i></button>
+                        </form>
+                            </h4>
                     <p id="note-display-folder"></p>
-                    <textarea class="form-control" id="note-display-content"></textarea>
-                    <div class="row">
-                        <div class="col-12 text-right">
-                            <button type="button" class="btn btn-secondary" id="close-note-display">Close</button>
+                    <form action="dashboard" method="POST">
+                        <textarea class="form-control" name="note_save_content" rows="8" id="note-display-content"></textarea>
+                        <div class="row">
+                            <div class="col-12 text-right">
+                                <button type="button" class="btn btn-secondary" id="close-note-display" style="display: inline-block">Close</button>
+                                    <input type="hidden" name="note_save_title" class="note_edit_title">
+                                    <input type="hidden" name="note_save_folder" class="note_edit_folder">
+                                    <input type="hidden" class="note_edit_folder">
+                                    <button type="submit" class="btn btn-primary" name="edit_note"><i class="fa fa-floppy-o"></i></button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -153,26 +184,37 @@ include('views/inc/partials/app-navbar.phtml');
     // Close note display window
     $('#close-note-display').click(function() {
         $('#note-display').hide();
+        $('#note-display-title').text('');
+        $('#note-display-folder').html('');
+        $('#note-display-content').text('');
     });
     
     // Opening note from tree
     $('.note-li').click(function(e) {
+       $('#add_folder_con').hide();
+       $('#add_note_con').hide();
        var title = this.getAttribute('data-title');
        var folder = this.getAttribute('data-folder');
        if (folder != '') {
-           folder = '<span class="text-muted"><i class="fa fa-folder"></i></span> <b>' + folder + '</b>';
+           folderText = '<span class="text-muted"><i class="fa fa-folder"></i></span> <b>' + folder + '</b>';
+       } else {
+           folderText = '';
        }
        var content = this.getAttribute('data-content');
        $('#note-display').show();
        $('#note-display-title').text(title);
-       $('#note-display-folder').html(folder);
+       $('#note-display-folder').html(folderText);
        $('#note-display-content').text(content);
+       // Hidden fields for deleting
+       $('.note_edit_title').val(title);
+       $('.note_edit_folder').val(folder);
     });
     
     // Add new note
     $('#new_note').click(function() {
        $('#add_note_con').show();
        $('#add_folder_con').hide();
+       $('#note-display').hide();
     });
     $('#cancel_note').click(function() {
         $('#add_note_con').hide();
@@ -180,6 +222,7 @@ include('views/inc/partials/app-navbar.phtml');
     $('#new_folder').click(function() {
        $('#add_folder_con').show();
        $('#add_note_con').hide();
+       $('#note-display').hide();
     });
     $('#cancel_folder').click(function() {
         $('#add_folder_con').hide();
@@ -214,6 +257,11 @@ include('views/inc/partials/app-navbar.phtml');
         if (width > 576) {
             $('#folders').show();
         }
+    });
+    
+    // Hiding success alert
+    $(window).click(function() {
+        $('.alert-success, .alert-danger').fadeOut();
     });
     
 </script>

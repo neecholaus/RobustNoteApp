@@ -28,10 +28,19 @@
 #drop-notes {
     width: 100% !important;
 }
+.btn-clear {
+    border: none !important;
+    background-color: transparent !important;
+    padding: 0;
+    margin: 0;
+}
 @media(max-width: 992px) {
     .mobile-btn {
         width: 100% !important;
         margin-top: 10px;
+    }
+    .btn {
+        padding: 15px !important;
     }
 }
 @media(max-width: 575px) {
