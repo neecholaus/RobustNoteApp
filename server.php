@@ -7,7 +7,7 @@ $errors = array();
 $error = '';
 
 # Connect to the database
-$db = mysqli_connect('45.55.195.143', 'root', 'NickNeuman$4', 'notes');
+$db = mysqli_connect('###', '###', '###', '###');
 
 # Register user
 if (isset($_POST['register_btn'])) {
