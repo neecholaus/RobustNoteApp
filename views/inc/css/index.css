@@ -1,3 +1,25 @@
+.fixed-top.navbar {
+    background-color: rgba(0,0,0,0.2);
+}
+
 .form-control {
     margin-bottom: 10px;
 }
+
+/* Navbar styling for home page */
+.fixed-top .nav-link {
+    color: #E0E0E0 !important;
+}
+.fixed-top .nav-link:hover {
+    color: white !important;
+}
+.fixed-top .navbar-brand {
+    color: white !important;
+}
+
+/* Home page header */
+#header {
+    padding: 150px 20px 100px 20px;
+    background: linear-gradient(45deg, #006ECF, #00DB9A);
+}
+

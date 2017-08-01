@@ -7,7 +7,8 @@ $errors = array();
 $error = '';
 
 # Connect to the database
-$db = mysqli_connect('###', '###', '###', '###');
+$db = new mysqli('###', '###', '###', '###');
+
 
 # Register user
 if (isset($_POST['register_btn'])) {
@@ -31,7 +32,7 @@ if (isset($_POST['register_btn'])) {
     if ($password != $verify_pass) {
         array_push($errors, 'Passwords do not match.');
     }
-    
+
     # If no errors, save user to database
     if (count($errors) == 0) {
         # Hashes password for security
@@ -47,7 +48,7 @@ if (isset($_POST['register_btn'])) {
         $_SESSION['user'] = $user;
         $_SESSION['username'] = $username;
         $_SESSION['success'] = 'You are now logged in as ' . $username . '.';
-        header('location: dashboard');
+        header('location: dashboard.php');
     }
 }
 
@@ -83,7 +84,7 @@ if (isset($_POST['login_btn'])) {
             $user = mysqli_fetch_object($result);
             $_SESSION['user'] = $user;
             $_SESSION['username'] = $username;
-            header('location: dashboard');
+            header('location: dashboard.php');
         } else {
             array_push($errors, 'The username/password combination is incorrect.');
         }
@@ -110,7 +111,7 @@ if (isset($_POST['save_note_btn'])) {
     $users_notes = mysqli_query($db, $users_notes);
     if (mysqli_num_rows($users_notes) != 0) {
         $errors[] = "You already have a note called '$note_title' in the selected folder.";
-        header('location: dashboard');
+        header('location: dashboard.php');
     }
     
     if (count($errors) == 0) {
@@ -120,7 +121,7 @@ if (isset($_POST['save_note_btn'])) {
         mysqli_query($db, $sql);
     }
     
-    header('location: dashboard?error=' . base64_encode($error));
+    header('location: dashboard.php?error=' . base64_encode($error));
 }
 
 
@@ -137,7 +138,7 @@ if (isset($_POST['save_folder_btn'])) {
     $user_folders = mysqli_query($db, $user_folders);
     if (mysqli_num_rows($user_folders) > 0) {
         $error = base64_encode('You have already made a folder with this name.');
-        header('location: dashboard?error=' . $error);
+        header('location: dashboard.php?error=' . $error);
     }
     
     $checkName = "SELECT * FROM user_folders WHERE username='$username' AND folder_title='$folder_title'";
@@ -147,6 +148,7 @@ if (isset($_POST['save_folder_btn'])) {
             $sql = "INSERT INTO user_folders (username, folder_title) VALUES ('$username', '$folder_title')";
             # Actual injection
             mysqli_query($db, $sql);
+	    header('location: dashboard.php?success=' . base64_encode('Your folder has been created'));
         }
     }
 }
@@ -161,7 +163,7 @@ if (isset($_POST['delete_note'])) {
     $username = $_SESSION['username'];
     $sql = "DELETE FROM user_notes WHERE note_title='$title' AND note_folder='$folder' AND username='$username'";
     $res = mysqli_query($db, $sql);
-    header('location: dashboard?success=' . base64_encode('Your note has been removed successfully.'));
+    header('location: dashboard.php?success=' . base64_encode('Your note has been removed successfully.'));
 }
 
 
@@ -171,7 +173,7 @@ if (isset($_POST['delete_folder'])) {
     $username = $_SESSION['username'];
     $sql = "DELETE FROM user_folders WHERE username='$username' AND folder_title='$title'";
     $res = mysqli_query($db, $sql);
-    header('location: dashboard?success=' . base64_encode('Your folder has been removed successfully.'));
+    header('location: dashboard.php?success=' . base64_encode('Your folder has been removed successfully.'));
 }
 
 
@@ -184,7 +186,7 @@ if (isset($_POST['edit_note'])) {
     $username = $_SESSION['username'];
     $sql = "UPDATE user_notes SET note_content='$content' WHERE username='$username'";
     mysqli_query($db, $sql);
-    header('location: dashboard?success=' . base64_encode('Your note has been updated.'));
+    header('location: dashboard.php?success=' . base64_encode('Your note has been updated.'));
 }
 
 ?>

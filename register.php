@@ -15,7 +15,7 @@ include('views/inc/partials/head.phtml');
 include('views/inc/partials/site-navbar.phtml');
 ?>
 
-<div class="container-fluid" id="register-form">
+<div class="container-fluid">
     <div class="container pt-5 pb-5">
         <div class="row">
             <form class="col-xs-12 col-sm-10 col-md-8 col-lg-6 mx-auto" action="register.php" method="POST">
@@ -35,7 +35,7 @@ include('views/inc/partials/site-navbar.phtml');
                 <input type="password" class="form-control" name="verify_pass" placeholder="Verify Password"  />
                 <div class="row mt-3">
                     <div class="col-12">
-                        <a href="login" target="_self">Login</a><span class="pull-right"><button type="submit" name="register_btn" class="btn btn-success">Sign Up</button></span>
+                        <a href="login.php" target="_self">Login</a><span class="pull-right"><button type="submit" name="register_btn" class="btn btn-primary">Sign Up</button></span>
                     </div>
                 </div>
             </form>
@@ -49,6 +49,3 @@ include('views/inc/partials/site-navbar.phtml');
         console.log($(this).val());
     });
 </script>
-
-
-<?php include('views/inc/partials/footer.phtml'); ?>

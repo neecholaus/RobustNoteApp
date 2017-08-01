@@ -1,4 +1,38 @@
-
+#folders {
+    background-color: #007c94;
+}
+@media(min-width: 576px) {
+    #folders {
+	overflow-y: scroll;
+    }
+}
+.tree-header {
+    color: white;
+    padding: 10px 0 5px 5px;
+    background-color: rgba(0,0,0,0.3) !important;
+    margin-bottom: 0;
+}
+.icon-con {
+    display: inline-block;
+    margin: 0 auto;
+    border: solid 2px #007c94;
+    border-radius: 100%;
+    height: 50px !important;
+    width: 50px !important;
+    padding: 0;
+    background-color: #007c94;
+    color: white;
+}
+.icon {
+    line-height: 50px;
+    height: 50px;
+}
+.icon-btn-text {
+    font-size: 12px !important;
+}
+.icon {
+    margin-top: -2px !important;
+}
 .note-list {
     padding-left: 0;
 }
@@ -7,15 +41,15 @@
     width: 100%;
     list-style-type: none;
     font-size: 15px;
+    color: white;
 }
 .note-li:hover {
-    background-color: #d6d6d6 !important;
+    background-color: rgba(0,0,0,0.3) !important;
 }
 .folder-list {
     padding-left: 0;
 }
 .folder-li {
-    background-color: #90C3D4;
     width: 100%;
     padding: 5px 7px 5px 7px;
     color: white;
@@ -23,9 +57,9 @@
     list-style-type: none;
 }
 .folder-li:hover {
-    background-color: #4B9ADE;
+    background-color: rgba(0,0,0,0.3) !important;
 }
-#drop-notes {
+button#drop-notes {
     width: 100% !important;
 }
 .btn-clear {
@@ -34,13 +68,16 @@
     padding: 0;
     margin: 0;
 }
+#display {
+    border-top: solid 1px #e3e3e3;
+}
 @media(max-width: 992px) {
     .mobile-btn {
         width: 100% !important;
         margin-top: 10px;
     }
     .btn {
-        padding: 15px !important;
+        padding: 9px !important;
     }
 }
 @media(max-width: 575px) {

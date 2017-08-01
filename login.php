@@ -5,12 +5,13 @@ include('server.php');
 
 
 $pageTitle = 'Login | Robust Notes';
-$specCSS = 'index';
+$specCSS = 'login';
 include('views/inc/partials/head.phtml');
 include('views/inc/partials/site-navbar.phtml');
 ?>
 
 
+<div class="container-fluid">
 <div class="container pt-5 pb-5">
     <div class="row">
         <form class="col-xs-12 col-sm-10 col-md-8 col-lg-6 mx-auto" action="login.php" method="POST">
@@ -28,12 +29,11 @@ include('views/inc/partials/site-navbar.phtml');
             </div>
             <div class="row mt-3">
                 <div class="col-12">
-                    <a href="register" target="_self">Sign Up</a><span class="pull-right"><button type="submit" name="login_btn" class="btn btn-success">Login</button></span>
+                    <a href="register.php" target="_self">Sign Up</a><span class="pull-right"><button type="submit" name="login_btn" class="btn btn-primary">Login</button></span>
                 </div>
             </div>
         </form>
     </div>
 </div>
+</div>
 
-
-<?php include('views/inc/partials/footer.phtml'); ?>
